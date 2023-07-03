@@ -33,6 +33,15 @@ namespace remodule {
 		init_module_status status;
 	};
 
+	enum class unload_module_status {
+		SUCCESS = 0,
+		ERROR
+	};
+
+	struct unload_module_result {
+		unload_module_status status;
+	};
+
 	enum class module_status {
 		UNLOADED = 0,
 		LOADED = 1,
@@ -50,16 +59,17 @@ namespace remodule {
 		virtual load_module_result load_module(const char *path);
 		virtual init_module_result init_module(const module_handle handle);
 		virtual module_status get_module_status(const module_handle handle) const;
+		virtual unload_module_result unload_module(const module_handle handle);
 
 	protected:
 		struct loaded_module {
-			module_interface* interface;
+			module_interface* interface = nullptr;
 			module_status status;
 			std::string path;
 			module_handle handle;
-			platform_library *library;
-			allocate_module_func *allocate_func;
-			free_module_func *free_func;
+			platform_library *library = nullptr;
+			allocate_module_func *allocate_func = nullptr;
+			free_module_func *free_func = nullptr;
 		};
 
 		std::unordered_map<module_handle, loaded_module> m_modules;

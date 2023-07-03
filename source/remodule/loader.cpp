@@ -79,6 +79,27 @@ namespace remodule {
 		}
 	}
 
+	unload_module_result loader::unload_module(const module_handle handle) {
+		if (auto module_itr = m_modules.find(handle); module_itr != m_modules.end()) {
+			auto &mod = module_itr->second;
+			if (mod.interface != nullptr) {
+				mod.free_func(reinterpret_cast<void*>(mod.interface));
+			}
+			mod.allocate_func = nullptr;
+			mod.free_func = nullptr;
+
+			auto result = remodule::unload_library(mod.library);
+			if (result.status == unload_library_status::SUCCESS) {
+				return {unload_module_status::SUCCESS};
+			} else {
+				mod.status = module_status::UNLOADED;
+				return {unload_module_status::ERROR};
+			}
+		} else {
+			return {unload_module_status::ERROR};
+		}
+	}
+
 	module_status loader::get_module_status(const module_handle handle) const {
 		if (const auto module_itr = m_modules.find(handle); module_itr != m_modules.end()) {
 			return module_itr->second.status;
