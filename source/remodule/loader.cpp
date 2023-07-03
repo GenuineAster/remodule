@@ -73,6 +73,7 @@ namespace remodule {
 			} else {
 				return {init_module_status::INTERFACE_INIT_FAILED};
 			}
+			mod.status = module_status::INITIALIZED;
 			return {init_module_status::SUCCESS};
 		} else {
 			return {init_module_status::MODULE_NOT_FOUND};

@@ -48,7 +48,8 @@ namespace remodule {
 
 	enum class module_status {
 		UNLOADED = 0,
-		LOADED = 1,
+		LOADED,
+		INITIALIZED,
 	};
 
 	class REMODULE_EXPORT loader {
