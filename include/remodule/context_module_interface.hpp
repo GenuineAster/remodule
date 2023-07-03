@@ -4,7 +4,7 @@
 
 namespace remodule {
 	template<class T>
-	class REMODULE_EXPORT context_module_interface : module_interface {
+	class REMODULE_EXPORT context_module_interface : public module_interface {
 	public:
 		virtual module_type get_type() const override final {
 			return module_type::CONTEXT;

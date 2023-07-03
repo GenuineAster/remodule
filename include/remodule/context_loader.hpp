@@ -24,7 +24,7 @@ namespace remodule {
 			if (result.status == init_module_status::SUCCESS) {
 				if (auto module_itr = m_modules.find(handle); module_itr != m_modules.end()) {
 					if (module_itr->second.interface->get_type() == module_type::CONTEXT) {
-						dynamic_cast<module_interface_type*>(module_itr->second.interface)->set_context(m_context);
+						static_cast<module_interface_type*>(module_itr->second.interface)->set_context(m_context);
 					}
 				}
 			}
