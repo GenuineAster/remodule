@@ -1,11 +1,12 @@
-#define CATCH_CONFIG_FAST_COMPILE 
+#define CATCH_CONFIG_FAST_COMPILE
 
 #include <catch2/catch.hpp>
 
-#include <string>
 #include <remodule/context_loader.hpp>
 
 #include "common.hpp"
+
+#include <string>
 
 #if defined(_WIN32)
 static const char *s_library_suffix = ".dll";
@@ -15,8 +16,8 @@ static const char *s_library_suffix = ".so";
 
 TEST_CASE("Full test", "[full_test]") {
 	context ctx;
-	remodule::loader<context> loader(&ctx);
-	auto result = loader.load_module(std::string{"test_module_a"} + s_library_suffix);
+	remodule::context_loader<context> loader(&ctx);
+	auto result = loader.load_module((std::string{"test_module_a"} + s_library_suffix).c_str());
 	REQUIRE(result.status == remodule::load_module_status::SUCCESS);
 	REQUIRE(loader.get_module_status(result.handle) == remodule::module_status::LOADED);
 	auto init_result = loader.init_module(result.handle);

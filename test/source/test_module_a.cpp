@@ -1,5 +1,6 @@
 #include "common.hpp"
-#include <remodule/loader.hpp>
+
+#include <remodule/context_module_interface.hpp>
 
 #if defined(_WIN32)
 #define MODULE_EXPORT __declspec(dllexport)
@@ -12,7 +13,7 @@ extern "C" {
 	MODULE_EXPORT void remodule_free_module(void *module);
 }
 
-class test_module_a final : public remodule::module_interface<context> {
+class test_module_a final : public remodule::context_module_interface<context> {
 public:
 	virtual void set_context(context *context) override {
 		m_context = context;
