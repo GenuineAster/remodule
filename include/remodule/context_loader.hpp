@@ -2,10 +2,10 @@
 
 #include <remodule/remodule_export.hpp>
 
-#include <unordered_map>
-
 #include <remodule/loader.hpp>
 #include <remodule/context_module_interface.hpp>
+
+#include <unordered_map>
 
 namespace remodule {
 	template<class T>

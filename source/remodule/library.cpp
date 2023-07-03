@@ -1,7 +1,5 @@
 #include <remodule/library.hpp>
 
-#include <system_error>
-
 #if defined(_WIN32)
 	#define WIN32_LEAN_AND_MIN
 	#define NOMINMAX
@@ -10,6 +8,7 @@
 	#include <errhandlingapi.h>
 	#undef ERROR
 #elif defined(__linux__)
+	#include <dlfcn.h>
 #endif
 
 namespace remodule {

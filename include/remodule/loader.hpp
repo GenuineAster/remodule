@@ -2,11 +2,11 @@
 
 #include <remodule/remodule_export.hpp>
 
-#include <string>
-#include <unordered_map>
-
 #include <remodule/library_fwd.hpp>
 #include <remodule/module_interface_fwd.hpp>
+
+#include <string>
+#include <unordered_map>
 
 namespace remodule {
 	using module_handle = std::uint64_t;

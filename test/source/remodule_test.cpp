@@ -3,8 +3,7 @@
 #include <catch2/catch.hpp>
 
 #include <string>
-#include <remodule/remodule.hpp>
-#include <remodule/loader.hpp>
+#include <remodule/context_loader.hpp>
 
 #include "common.hpp"
 
