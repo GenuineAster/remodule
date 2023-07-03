@@ -16,7 +16,9 @@ namespace remodule {
 
 	enum class load_module_status {
 		SUCCESS = 0,
-		ERROR
+		LIBRARY_LOAD_FAILED,
+		ALLOCATE_FUNC_MISSING,
+		FREE_FUNC_MISSING
 	};
 
 	struct load_module_result {
@@ -26,7 +28,8 @@ namespace remodule {
 
 	enum class init_module_status {
 		SUCCESS = 0,
-		ERROR
+		MODULE_NOT_FOUND,
+		INTERFACE_INIT_FAILED
 	};
 
 	struct init_module_result {
@@ -35,7 +38,8 @@ namespace remodule {
 
 	enum class unload_module_status {
 		SUCCESS = 0,
-		ERROR
+		MODULE_NOT_FOUND,
+		LIBRARY_UNLOAD_FAILED,
 	};
 
 	struct unload_module_result {

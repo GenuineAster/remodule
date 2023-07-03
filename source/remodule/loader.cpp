@@ -45,7 +45,7 @@ namespace remodule {
 				mod.allocate_func = reinterpret_cast<allocate_module_func*>(allocate_func_result.func_addr);
 			} else {
 				remodule::unload_library(mod.library);
-				return {load_module_status::ERROR, c_invalid_module_handle};
+				return {load_module_status::ALLOCATE_FUNC_MISSING, c_invalid_module_handle};
 			}
 
 			auto free_func_result = remodule::get_func_addr(mod.library, "remodule_free_module");
@@ -53,14 +53,14 @@ namespace remodule {
 				mod.free_func = reinterpret_cast<free_module_func*>(free_func_result.func_addr);
 			} else {
 				remodule::unload_library(mod.library);
-				return {load_module_status::ERROR, c_invalid_module_handle};
+				return {load_module_status::FREE_FUNC_MISSING, c_invalid_module_handle};
 			}
 
 			m_modules.emplace(std::make_pair(mod.handle, std::move(mod)));
 
 			return {load_module_status::SUCCESS, m_handle_counter};
 		} else {
-			return {load_module_status::ERROR, c_invalid_module_handle};
+			return {load_module_status::LIBRARY_LOAD_FAILED, c_invalid_module_handle};
 		}
 	}
 
@@ -71,11 +71,11 @@ namespace remodule {
 			if (interface != nullptr) {
 				mod.interface = interface;
 			} else {
-				return {init_module_status::ERROR};
+				return {init_module_status::INTERFACE_INIT_FAILED};
 			}
 			return {init_module_status::SUCCESS};
 		} else {
-			return {init_module_status::ERROR};
+			return {init_module_status::MODULE_NOT_FOUND};
 		}
 	}
 
@@ -90,13 +90,13 @@ namespace remodule {
 
 			auto result = remodule::unload_library(mod.library);
 			if (result.status == unload_library_status::SUCCESS) {
+				mod.status = module_status::UNLOADED;
 				return {unload_module_status::SUCCESS};
 			} else {
-				mod.status = module_status::UNLOADED;
-				return {unload_module_status::ERROR};
+				return {unload_module_status::LIBRARY_UNLOAD_FAILED};
 			}
 		} else {
-			return {unload_module_status::ERROR};
+			return {unload_module_status::MODULE_NOT_FOUND};
 		}
 	}
 
