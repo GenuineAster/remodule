@@ -69,9 +69,9 @@ namespace remodule {
 	protected:
 		struct loaded_module {
 			module_interface* interface = nullptr;
-			module_status status;
+			module_status status = module_status::UNLOADED;
 			std::string path;
-			module_handle handle;
+			module_handle handle = c_invalid_module_handle;
 			platform_library *library = nullptr;
 			allocate_module_func *allocate_func = nullptr;
 			free_module_func *free_func = nullptr;
@@ -80,6 +80,6 @@ namespace remodule {
 		std::unordered_map<module_handle, loaded_module> m_modules;
 
 	private:
-		module_handle m_handle_counter;
+		module_handle m_handle_counter = 0;
 	};
 }
