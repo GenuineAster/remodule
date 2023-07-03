@@ -22,8 +22,6 @@ class Recipe(ConanFile):
 
     default_options = {
         "catch2/*:with_main": True,
-        "spdlog/*:no_exceptions": True,
-        "spdlog/*:wchar_support": True,
         "shared": False,
         "fPIC": True
     }
@@ -34,7 +32,7 @@ class Recipe(ConanFile):
          "revision": "auto"
     }
 
-    exports_sources = ["source/*", "include/*", "external/*", "cmake/*", "CMakeLists.txt", "test/*", "resources/*"]
+    exports_sources = ["source/*", "include/*", "cmake/*", "CMakeLists.txt", "test/*"]
 
     def configure(self):
         if self.options["shared"] and self.settings.os == "Linux":
@@ -45,8 +43,6 @@ class Recipe(ConanFile):
         self.folders.build = "build"
 
     def requirements(self):
-        self.requires("tl-expected/1.0.0")
-
         # Testing only dependencies below
         self.requires("catch2/2.13.9")
 
@@ -60,22 +56,9 @@ class Recipe(ConanFile):
         cmake.build()
 
     def package(self):
-        self.copy(pattern="LICENSE.txt", dst="licenses", src=self.source_folder)
+        self.copy(pattern="LICENSE.md", dst="licenses", src=self.source_folder)
         cmake = self._configure_cmake()
         cmake.install()
 
     def package_info(self):
         self.cpp_info.libs = ["remodule"]
-
-    def imports(self):
-        # ImGui implementations
-        self.copy("imgui_impl_glfw.*", "external/imgui_impl", "res/bindings/", root_package="imgui")
-        self.copy("imgui_impl_vulkan.*", "external/imgui_impl", "res/bindings/", root_package="imgui")
-
-        # Icon fonts
-        self.copy("*.ttf", "resources/fonts/external", "res/fonts/", root_package="icon-font-cpp-headers")
-
-        if self.settings.os == "Windows":
-            self.copy("*.dll", "external/bin", "bin/")
-        else:
-            self.copy("*.so", "external/bin", "lib/")
