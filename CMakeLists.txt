@@ -64,12 +64,16 @@ include(cmake/dev-mode.cmake)
 # ---- REMODULE library ----
 add_library(
     remodule_remodule
-    include/remodule/remodule.hpp
-    source/remodule/remodule.cpp
     include/remodule/loader.hpp
     source/remodule/loader.cpp
+    include/remodule/context_loader.hpp
+    include/remodule/library_fwd.hpp
     include/remodule/library.hpp
     source/remodule/library.cpp
+    include/remodule/module_interface_fwd.hpp
+    include/remodule/module_interface.hpp
+    source/remodule/module_interface.cpp
+    include/remodule/context_module_interface.hpp
 )
 add_library(remodule::remodule ALIAS remodule_remodule)
 

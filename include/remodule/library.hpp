@@ -2,6 +2,8 @@
 
 #include <remodule/remodule_export.hpp>
 
+#include <remodule/library_fwd.hpp>
+
 namespace remodule {
 	struct platform_library;
 
