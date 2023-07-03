@@ -1,0 +1,236 @@
+{
+  "version": 5,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 24,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "cmake-pedantic",
+      "hidden": true,
+      "warnings": {
+        "dev": true,
+        "deprecated": true,
+        "uninitialized": true,
+        "unusedCli": true,
+        "systemVars": false
+      },
+      "errors": {
+        "dev": true,
+        "deprecated": true
+      }
+    },
+    {
+      "name": "dev-mode",
+      "hidden": true,
+      "inherits": "cmake-pedantic",
+      "cacheVariables": {
+        "REMODULE_DEVELOPER_MODE": "ON"
+      }
+    },
+    {
+      "name": "conan",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/conan/conan_toolchain.cmake",
+        "CMAKE_POLICY_DEFAULT_CMP0091": "NEW"
+      }
+    },
+    {
+      "name": "cppcheck",
+      "hidden": true,
+      "cacheVariables": {
+        "REMODULE_ENABLE_CPPCHECK": "ON"
+      }
+    },
+    {
+      "name": "clang-tidy",
+      "hidden": true,
+      "cacheVariables": {
+        "REMODULE_ENABLE_CLANG_TIDY": "ON"
+      }
+    },
+    {
+      "name": "ci-unix",
+      "generator": "Ninja",
+      "hidden": true,
+      "inherits": [],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "ci-win64",
+      "inherits": [],
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "hidden": true
+    },
+    {
+      "name": "coverage-unix",
+      "inherits": "ci-unix",
+      "hidden": true,
+      "cacheVariables": {
+        "REMODULE_ENABLE_COVERAGE": "ON",
+        "CMAKE_BUILD_TYPE": "Coverage"
+      }
+    },
+    {
+      "binaryDir": "${sourceDir}/build/ci/coverage",
+      "name": "ci-coverage",
+      "inherits": ["coverage-unix", "dev-mode", "conan"],
+      "cacheVariables": {
+        "COVERAGE_HTML_COMMAND": ""
+      }
+    },
+    {
+      "name": "ci-sanitize",
+      "binaryDir": "${sourceDir}/build/ci/sanitize",
+      "inherits": ["ci-unix", "dev-mode", "conan"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Sanitize",
+        "REMODULE_ENABLE_SANITIZERS": "ON"
+      }
+    },
+    {
+      "name": "ci-build",
+      "binaryDir": "${sourceDir}/build/ci/build",
+      "hidden": true
+    },
+    {
+      "name": "ci-macos",
+      "binaryDir": "${sourceDir}/build/ci/macos",
+      "inherits": ["ci-build", "ci-unix", "dev-mode", "conan"]
+    },
+    {
+      "name": "ci-ubuntu",
+      "binaryDir": "${sourceDir}/build/ci/ubuntu",
+      "inherits": ["ci-build", "ci-unix", "clang-tidy", "conan", "cppcheck", "dev-mode"]
+    },
+    {
+      "name": "ci-windows",
+      "binaryDir": "${sourceDir}/build/ci/windows",
+      "inherits": ["ci-build", "ci-win64", "dev-mode", "conan"]
+    },
+    {
+      "name": "dev-common",
+      "hidden": true,
+      "inherits": [
+          "dev-mode",
+          "conan"
+      ],
+      "cacheVariables": {
+          "BUILD_MCSS_DOCS": "ON"
+      }
+    },
+    {
+        "name": "dev-unix",
+        "binaryDir": "${sourceDir}/build/dev/unix",
+        "inherits": [
+            "dev-common",
+            "ci-unix"
+        ],
+        "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Debug"
+        }
+    },
+    {
+      "name": "dev-unix-gcc",
+      "binaryDir": "${sourceDir}/build/dev/unix-gcc",
+      "inherits": [
+          "dev-common",
+          "ci-unix"
+      ],
+      "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "environment": {
+        "CC": "gcc",
+        "CXX": "g++"
+      }
+    },
+    {
+      "name": "dev-unix-clang",
+      "binaryDir": "${sourceDir}/build/dev/unix-clang",
+      "inherits": [
+          "dev-common",
+          "ci-unix"
+      ],
+      "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "environment": {
+        "CC": "clang",
+        "CXX": "clang++"
+      }
+    },
+    {
+        "name": "dev-win64",
+        "binaryDir": "${sourceDir}/build/dev/win64",
+        "inherits": [
+            "dev-common",
+            "ci-win64"
+        ]
+    },
+    {
+        "name": "dev-coverage",
+        "binaryDir": "${sourceDir}/build/dev/coverage",
+        "inherits": [
+            "dev-mode",
+            "coverage-unix",
+            "conan"
+        ]
+    }
+  ],
+  "buildPresets": [
+    {
+        "name": "dev-win64-debug",
+        "configurePreset": "dev-win64",
+        "configuration": "Debug",
+        "jobs": 16
+    },
+    {
+      "name": "dev-unix-debug",
+      "configurePreset": "dev-unix",
+      "configuration": "Debug",
+      "jobs": 16
+    },
+    {
+      "name": "dev-unix-gcc-debug",
+      "configurePreset": "dev-unix-gcc",
+      "configuration": "Debug",
+      "jobs": 16
+    },
+    {
+      "name": "dev-unix-clang-debug",
+      "configurePreset": "dev-unix-clang",
+      "configuration": "Debug",
+      "jobs": 16
+    }
+  ],
+  "testPresets": [
+    {
+        "name": "dev-win64-debug",
+        "configurePreset": "dev-win64",
+        "configuration": "Debug",
+        "output": {
+            "outputOnFailure": true
+        },
+        "execution": {
+            "jobs": 16
+        }
+    },
+    {
+      "name": "dev-unix-debug",
+      "configurePreset": "dev-unix",
+      "configuration": "Debug",
+      "output": {
+          "outputOnFailure": true
+      },
+      "execution": {
+          "jobs": 16
+      }
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+struct context {
+	bool foobar;
+};
