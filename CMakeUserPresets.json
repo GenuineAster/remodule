@@ -1,9 +1,0 @@
-{
-    "version": 4,
-    "vendor": {
-        "conan": {}
-    },
-    "include": [
-        "C:\\dev\\personal\\sea\\remodule\\conan\\CMakePresets.json"
-    ]
-}
