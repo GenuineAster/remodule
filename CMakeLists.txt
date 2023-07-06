@@ -49,17 +49,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # ---- Developer mode ----
 
-if(NOT REMODULE_DEVELOPER_MODE)
-  return()
-elseif(NOT PROJECT_IS_TOP_LEVEL)
-  message(
-      AUTHOR_WARNING
-      "Developer mode is intended for developers of remodule"
-  )
+if (REMODULE_DEVELOPER_MODE)
+  if (NOT PROJECT_IS_TOP_LEVEL)
+    message(
+        AUTHOR_WARNING
+        "Developer mode is intended for developers of remodule"
+    )
+  endif()
+  include(cmake/dev-mode.cmake)
 endif()
-
-include(cmake/dev-mode.cmake)
-
 
 # ---- REMODULE library ----
 add_library(
@@ -111,19 +109,15 @@ target_include_directories(
     "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/export>"
 )
 
-find_package(tl-expected REQUIRED)
-
-target_link_libraries(
-  remodule_remodule PUBLIC tl::expected
-)
-
 target_compile_features(remodule_remodule PUBLIC cxx_std_20)
 
 # ---- Tests ----
 
-if(REMODULE_ENABLE_TESTS)
+if (REMODULE_DEVELOPER_MODE)
   include(CTest)
-  add_subdirectory(test)
+  if (BUILD_TESTING)
+    add_subdirectory(test)
+  endif()
 endif()
 
 # ---- Install rules ----
